@@ -103,6 +103,10 @@ resource storeApi 'Microsoft.Web/sites@2022-09-01' = {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
           value: appInsights.properties.ConnectionString
         }
+        {
+          name: 'ConnectionStrings__DefaultConnection'
+          value: 'Server=tcp:${sqlServer.properties.fullyQualifiedDomainName},1433;Initial Catalog=${databaseName};Persist Security Info=False;User ID=${sqlAdministratorLogin};Password=${sqlAdministratorPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+        }
       ]
     }
   }
@@ -151,6 +155,10 @@ resource productFunction 'Microsoft.Web/sites@2022-09-01' = {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
           value: appInsights.properties.ConnectionString
         }
+        {
+          name: 'ConnectionStrings__DefaultConnection'
+          value: 'Server=tcp:${sqlServer.properties.fullyQualifiedDomainName},1433;Initial Catalog=${databaseName};Persist Security Info=False;User ID=${sqlAdministratorLogin};Password=${sqlAdministratorPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+        }
       ]
     }
   }
@@ -172,6 +180,12 @@ resource storeApiStagingSlot 'Microsoft.Web/sites/slots@2022-09-01' = {
       ftpsState: 'Disabled'
       http20Enabled: true
       minTlsVersion: '1.2'
+      appSettings: [
+        {
+          name: 'ConnectionStrings__DefaultConnection'
+          value: 'Server=tcp:${sqlServer.properties.fullyQualifiedDomainName},1433;Initial Catalog=${databaseName};Persist Security Info=False;User ID=${sqlAdministratorLogin};Password=${sqlAdministratorPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+        }
+      ]
     }
   }
 }
@@ -192,6 +206,12 @@ resource productFunctionStagingSlot 'Microsoft.Web/sites/slots@2022-09-01' = {
       ftpsState: 'Disabled'
       http20Enabled: true
       minTlsVersion: '1.2'
+      appSettings: [
+        {
+          name: 'ConnectionStrings__DefaultConnection'
+          value: 'Server=tcp:${sqlServer.properties.fullyQualifiedDomainName},1433;Initial Catalog=${databaseName};Persist Security Info=False;User ID=${sqlAdministratorLogin};Password=${sqlAdministratorPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
+        }
+      ]
     }
   }
 }

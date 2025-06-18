@@ -57,7 +57,7 @@ try {
     # Deploy Bicep template
     az deployment group create `
         --resource-group $resourceGroupName `
-        --template-file deploy/main.bicep `
+        --template-file "bicep deploy/main.bicep" `
         --parameters `
             environmentName=$Environment `
             location=$Location `
@@ -83,7 +83,7 @@ try {
 
     # Deploy functions and procedures
     Write-Host "Deploying database functions and procedures..."
-    foreach ($script in Get-ChildItem "deploy/database/functions" -Filter "*.sql") {
+    foreach ($script in Get-ChildItem "database/functions" -Filter "*.sql") {
         Write-Host "Executing $($script.Name)..."
         az sql db execute `
             --resource-group $resourceGroupName `
@@ -92,7 +92,7 @@ try {
             --file $script.FullName
     }
 
-    foreach ($script in Get-ChildItem "deploy/database/procedures" -Filter "*.sql") {
+    foreach ($script in Get-ChildItem "database/procedures" -Filter "*.sql") {
         Write-Host "Executing $($script.Name)..."
         az sql db execute `
             --resource-group $resourceGroupName `
