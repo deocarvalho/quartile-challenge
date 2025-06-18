@@ -1,0 +1,30 @@
+Practical
+
+Create a Postman collection to automate API testing and verify the behavior of your application's endpoints.
+
+Use the libraries you believe are most convenient for the tasks at hand.
+
+Create a student environment in Microsoft Azure that demonstrates your ability to use the platform's capabilities to solve the following questions:
+
+Question 1: API Development
+
+Develop a RESTful API to manage stores. The API should allow for the creation, reading, updating, and deletion of stores. Use C# or Python to create the API and host it on Azure App Service. Consider a globalized, multi-company environment where each company can have multiple stores.
+
+• Use TDD.
+
+Question 2: SQL Server Database
+
+You have been asked to create a simple database structure in SQL Server to store information about products. Create a table called Products. Define the fields and their types. Additionally, implement a scalar function in SQL Server. The scalar function should return a JSON object and list the products. Create a procedure to insert data into a table. Consider a globalized, multi-company environment where each company can have multiple stores.
+
+Develop a C# Azure Function microservice to manage product data in a SQL Server database. This serverless API should provide endpoints for create, read, update and delete operations on the Products table.
+
+The application needs to be initially published in the staging environment, and subsequently, a swap should be made to the production environment.
+
+Evaluation Criteria:
+
+• Correct functionality of the API (CRUD).
+• Proper use of RESTful patterns.
+• Good coding practice and project organization.
+• API documentation.
+
+Send us the Postman json collection.
