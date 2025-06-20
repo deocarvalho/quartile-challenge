@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -9,6 +8,32 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		PROJECT_PLAN.md = PROJECT_PLAN.md
 		PROJECT_PLAN_MERGED.md = PROJECT_PLAN_MERGED.md
 		PROJECT_PLAN_TDD.md = PROJECT_PLAN_TDD.md
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+	ProjectSection(SolutionItems) = preProject
+		docs\API.md = docs\API.md
+		docs\API-Testing.md = docs\API-Testing.md
+		docs\Performance-Test-Results.md = docs\Performance-Test-Results.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{B2C3D4E5-F6G7-8901-BCDE-F23456789012}"
+	ProjectSection(SolutionItems) = preProject
+		deploy\Deploy-Environment.ps1 = deploy\Deploy-Environment.ps1
+		deploy\Test-Deployment.ps1 = deploy\Test-Deployment.ps1
+		deploy\parameters.production.json = deploy\parameters.production.json
+		deploy\parameters.staging.json = deploy\parameters.staging.json
+		bicep deploy\main.bicep = bicep deploy\main.bicep
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{C3D4E5F6-G7H8-9012-CDEF-345678901234}"
+	ProjectSection(SolutionItems) = preProject
+		database\functions\fn_GetProductsAsJson.sql = database\functions\fn_GetProductsAsJson.sql
+		database\procedures\sp_InsertProduct.sql = database\procedures\sp_InsertProduct.sql
+		deploy\database\schemas\01_CreateTables.sql = deploy\database\schemas\01_CreateTables.sql
+		deploy\database\schemas\02_CreateIndexes.sql = deploy\database\schemas\02_CreateIndexes.sql
+		deploy\database\schemas\03_SeedData.sql = deploy\database\schemas\03_SeedData.sql
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuartileChallenge.Infrastructure", "src\QuartileChallenge.Infrastructure\QuartileChallenge.Infrastructure.csproj", "{3907E1FC-2B52-96DE-1D0B-F8AA1BDDECED}"
@@ -24,8 +49,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuartileChallenge.StoreApi", "src\QuartileChallenge.StoreApi\QuartileChallenge.StoreApi.csproj", "{C813885E-5668-2918-F393-24CC2CB49268}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuartileChallenge.ProductFunction", "src\QuartileChallenge.ProductFunction\QuartileChallenge.ProductFunction.csproj", "{C5797B1E-EE56-E06E-A47B-2F9A59C63B9C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuartileChallenge.IntegrationTests", "tests\QuartileChallenge.IntegrationTests\QuartileChallenge.IntegrationTests.csproj", "{FFA1B817-11A0-65F3-6823-35C8098CB876}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Postman", "Postman", "{27AEC788-DC66-45C6-9267-8578138A1BDC}"
 	ProjectSection(SolutionItems) = preProject
@@ -65,10 +88,6 @@ Global
 		{C5797B1E-EE56-E06E-A47B-2F9A59C63B9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5797B1E-EE56-E06E-A47B-2F9A59C63B9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5797B1E-EE56-E06E-A47B-2F9A59C63B9C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FFA1B817-11A0-65F3-6823-35C8098CB876}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FFA1B817-11A0-65F3-6823-35C8098CB876}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FFA1B817-11A0-65F3-6823-35C8098CB876}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FFA1B817-11A0-65F3-6823-35C8098CB876}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,9 +98,11 @@ Global
 		{CC8D6EC5-9FC5-2686-4A86-59D5C3321F9C} = {93801818-643A-4C4E-BCF2-F53FF2E9B2F9}
 		{C813885E-5668-2918-F393-24CC2CB49268} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{C5797B1E-EE56-E06E-A47B-2F9A59C63B9C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{FFA1B817-11A0-65F3-6823-35C8098CB876} = {93801818-643A-4C4E-BCF2-F53FF2E9B2F9}
 		{27AEC788-DC66-45C6-9267-8578138A1BDC} = {93801818-643A-4C4E-BCF2-F53FF2E9B2F9}
 		{DC334171-0A13-4740-B73F-6D5476DF59A1} = {27AEC788-DC66-45C6-9267-8578138A1BDC}
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
+		{B2C3D4E5-F6G7-8901-BCDE-F23456789012} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
+		{C3D4E5F6-G7H8-9012-CDEF-345678901234} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {843546E4-5BC9-4693-B152-1CCA44FCACB8}
