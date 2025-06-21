@@ -14,6 +14,9 @@ public class Store
 
     public Store(Guid companyId, string name, string location)
     {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Store name cannot be null, empty, or whitespace.", nameof(name));
+        
         Id = Guid.NewGuid();
         CompanyId = companyId;
         Name = name;

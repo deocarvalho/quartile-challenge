@@ -15,6 +15,12 @@ public class Product
 
     public Product(string name, string description, decimal price, Guid storeId)
     {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Product name cannot be null, empty, or whitespace.", nameof(name));
+        
+        if (price <= 0)
+            throw new ArgumentException("Product price must be greater than zero.", nameof(price));
+        
         Id = Guid.NewGuid();
         Name = name;
         Description = description;

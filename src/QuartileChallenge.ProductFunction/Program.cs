@@ -5,9 +5,18 @@ using QuartileChallenge.Core.Interfaces;
 using QuartileChallenge.Infrastructure;
 using QuartileChallenge.Infrastructure.Data;
 using QuartileChallenge.Infrastructure.Repositories;
+using System.Text.Json;
+using Microsoft.Azure.Functions.Worker;
 
 var host = new HostBuilder()
-    .ConfigureFunctionsWorkerDefaults()
+    .ConfigureFunctionsWorkerDefaults(builder =>
+    {
+        builder.Services.Configure<JsonSerializerOptions>(options =>
+        {
+            options.PropertyNameCaseInsensitive = true;
+            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        });
+    })
     .ConfigureServices((context, services) =>
     {
         // Add database context

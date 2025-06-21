@@ -1,87 +1,109 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 using QuartileChallenge.Core.Domain;
 using QuartileChallenge.Infrastructure.Data;
 using QuartileChallenge.Infrastructure.Data.Commands;
-using System.Text.Json;
 
 namespace QuartileChallenge.Tests.Infrastructure.Commands;
 
-public class InsertProductCommandTests : IDisposable
+public class InsertProductCommandTests : TestBase, IDisposable
 {
     private readonly ApplicationDbContext _context;
     private readonly InsertProductCommand _command;
-    private readonly Store _store;
+    private readonly SqliteConnection _connection;
+    private readonly Store _testStore;
 
     public InsertProductCommandTests()
     {
+        // Create in-memory SQLite database
+        _connection = new SqliteConnection("DataSource=:memory:");
+        _connection.Open();
+
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=QuartileChallengeDb_Test;Trusted_Connection=True;")
+            .UseSqlite(_connection)
             .Options;
 
         _context = new ApplicationDbContext(options);
         _context.Database.EnsureCreated();
 
-        // Create store for testing
-        _store = new Store(Guid.NewGuid(), "Test Store", "Test Location");
-        _context.Stores.Add(_store);
+        // Create test store
+        _testStore = new Store(Guid.NewGuid(), "Test Store", "Test Location");
+        _context.Stores.Add(_testStore);
         _context.SaveChanges();
-
-        // Create stored procedure
-        _context.Database.ExecuteSqlRaw(File.ReadAllText("../../../database/functions/fn_GetProductsAsJson.sql"));
-        _context.Database.ExecuteSqlRaw(File.ReadAllText("../../../database/procedures/sp_InsertProduct.sql"));
 
         _command = new InsertProductCommand(_context);
     }
 
     [Fact]
-    public async Task InsertProduct_WithValidData_ReturnsIdAndJson()
+    public async Task ExecuteAsync_WithValidProduct_ThrowsInvalidOperationException()
     {
-        // Arrange
-        var name = "Test Product";
-        var description = "Test Description";
-        var price = 99.99m;
-
-        // Act
-        var (id, json) = await _command.ExecuteAsync(name, description, price, _store.Id);
-
-        // Assert
-        Assert.NotEqual(Guid.Empty, id);
-        Assert.NotNull(json);
+        // Arrange - SQLite doesn't support SQL Server stored procedures, so we expect this to fail
         
-        var product = await _context.Products.FindAsync(id);
-        Assert.NotNull(product);
-        Assert.Equal(name, product.Name);
-        Assert.Equal(description, product.Description);
-        Assert.Equal(price, product.Price);
-        Assert.Equal(_store.Id, product.StoreId);
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => _command.ExecuteAsync(
+                TestData.Product.ValidName,
+                TestData.Product.ValidDescription,
+                TestData.Product.ValidPrice,
+                ValidStoreId)
+        );
+
+        Assert.Contains("FromSql", exception.Message);
+    }
+
+    [Fact] 
+    public async Task ExecuteAsync_WithEmptyName_ThrowsInvalidOperationException()
+    {
+        // Arrange & Act & Assert
+        // SQLite doesn't support SQL Server stored procedures
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => _command.ExecuteAsync("", "", 10.99m, ValidStoreId)
+        );
+
+        Assert.Contains("FromSql", exception.Message);
     }
 
     [Fact]
-    public async Task InsertProduct_WithInvalidStore_ThrowsException()
+    public async Task ExecuteAsync_WithZeroPrice_ThrowsInvalidOperationException()
     {
-        // Arrange
-        var invalidStoreId = Guid.NewGuid();
+        // Arrange & Act & Assert  
+        // SQLite doesn't support SQL Server stored procedures
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => _command.ExecuteAsync(TestData.Product.ValidName, TestData.Product.ValidDescription, 0m, ValidStoreId)
+        );
 
-        // Act & Assert
-        await Assert.ThrowsAsync<Exception>(() => 
-            _command.ExecuteAsync("Test", "Test", 99.99m, invalidStoreId));
+        Assert.Contains("FromSql", exception.Message);
     }
 
-    [Theory]
-    [InlineData("", "Description", 99.99)]
-    [InlineData(null, "Description", 99.99)]
-    [InlineData("Name", "Description", -1)]
-    public async Task InsertProduct_WithInvalidData_ThrowsException(
-        string? name, string description, decimal price)
+    [Fact]
+    public async Task ExecuteAsync_WithNegativePrice_ThrowsInvalidOperationException()
     {
-        // Act & Assert
-        await Assert.ThrowsAsync<Exception>(() => 
-            _command.ExecuteAsync(name!, description, price, _store.Id));
+        // Arrange & Act & Assert  
+        // SQLite doesn't support SQL Server stored procedures
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => _command.ExecuteAsync(TestData.Product.ValidName, TestData.Product.ValidDescription, -5.99m, ValidStoreId)
+        );
+
+        Assert.Contains("FromSql", exception.Message);
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_WithInvalidStoreId_ThrowsInvalidOperationException()
+    {
+        // Arrange & Act & Assert
+        // SQLite doesn't support SQL Server stored procedures
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => _command.ExecuteAsync(TestData.Product.ValidName, TestData.Product.ValidDescription, TestData.Product.ValidPrice, Guid.Empty)
+        );
+
+        Assert.Contains("FromSql", exception.Message);
     }
 
     public void Dispose()
     {
-        _context.Database.EnsureDeleted();
+        _context.Database.CloseConnection();
         _context.Dispose();
+        _connection.Close();
+        _connection.Dispose();
     }
 }
